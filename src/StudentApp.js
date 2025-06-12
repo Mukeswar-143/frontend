@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import './StudentApp.css';
-
-const apiBaseUrl = "http://localhost:8080/Student";
+import Api from "./services/Api";
+const apiBaseUrl = `${Api}/Student`;
 
 function StudentApp() {
     const [students, setStudents] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const studentsPerPage = 5;
+    
     const [form, setForm] = useState({
         id: "",
         name: "",
         gender: "",
-        natonality: "",
+        nationality: "",
         aadhaarnumber: "",
         phone_number: "",
         email: "",
@@ -58,14 +61,12 @@ function StudentApp() {
                 throw new Error("Network response was not ok");
             }
 
-            const savedStudent = await response.json();
-            console.log("Saved student with ID:", savedStudent.id);
-
+            await response.json();
             setForm({
                 id: "",
                 name: "",
                 gender: "",
-                natonality: "",
+                nationality: "",
                 aadhaarnumber: "",
                 phone_number: "",
                 email: "",
@@ -79,7 +80,6 @@ function StudentApp() {
     };
 
     const handleEdit = (student) => {
-        console.log("Editing student:", student);
         setForm(student);
         setIsEdit(true);
     };
@@ -101,76 +101,59 @@ function StudentApp() {
         }
     };
 
+    const handleDeleteAll = async () => {
+        if (!window.confirm("Are you sure you want to delete all students? This action cannot be undone.")) return;
+
+        try {
+            const response = await fetch(`${apiBaseUrl}/deleteAll`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete all students");
+            }
+
+            // Clear students list after deletion
+            setStudents([]);
+        } catch (err) {
+            console.error("Error deleting all students:", err);
+        }
+    };
+
+    // Pagination logic
+    const indexOfLastStudent = currentPage * studentsPerPage;
+    const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+    const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent);
+
+    const nextPage = () => {
+        if (currentPage < Math.ceil(students.length / studentsPerPage)) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
     return (
         <div style={{ padding: "20px" }}>
             <h2>Student Management</h2>
 
             <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
-                <div>
-                    <label>Name: </label>
-                    <input
-                        name="name"
-                        value={form.name}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Gender: </label>
-                    <input
-                        name="gender"
-                        value={form.gender}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Nationality: </label>
-                    <input
-                        name="natonality"
-                        value={form.natonality}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Aadhaar Number: </label>
-                    <input
-                        name="aadhaarnumber"
-                        value={form.aadhaarnumber}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Phone Number: </label>
-                    <input
-                        name="phone_number"
-                        value={form.phone_number}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Email: </label>
-                    <input
-                        name="email"
-                        value={form.email}
-                        onChange={handleInputChange}
-                        type="email"
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Address: </label>
-                    <input
-                        name="address"
-                        value={form.address}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-
+                {["name", "gender", "nationality", "aadhaarnumber", "phone_number", "email", "address"].map((field) => (
+                    <div key={field}>
+                        <label>{field.charAt(0).toUpperCase() + field.slice(1)}: </label>
+                        <input
+                            name={field}
+                            value={form[field]}
+                            onChange={handleInputChange}
+                            required={field !== "aadhaarNumber"}
+                        />
+                    </div>
+                ))}
+                
                 <button type="submit">{isEdit ? "Update Student" : "Add Student"}</button>
                 {isEdit && (
                     <button
@@ -180,7 +163,7 @@ function StudentApp() {
                                 id: "",
                                 name: "",
                                 gender: "",
-                                natonality: "",
+                                nationality: "",
                                 aadhaarnumber: "",
                                 phone_number: "",
                                 email: "",
@@ -210,16 +193,11 @@ function StudentApp() {
                     </tr>
                 </thead>
                 <tbody>
-                    {students.length === 0 && (
-                        <tr>
-                            <td colSpan="9">No students found.</td>
-                        </tr>
-                    )}
-                    {students.map((student) => (
+                    {currentStudents.map((student) => (
                         <tr key={student.id}>
                             <td>{student.name}</td>
                             <td>{student.gender}</td>
-                            <td>{student.natonality}</td>
+                            <td>{student.nationality}</td>
                             <td>{student.aadhaarnumber}</td>
                             <td>{student.phone_number}</td>
                             <td>{student.email}</td>
@@ -232,6 +210,19 @@ function StudentApp() {
                     ))}
                 </tbody>
             </table>
+
+            <div style={{ marginTop: "20px" }}>
+                <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+                <span> Page {currentPage} of {Math.ceil(students.length / studentsPerPage)} </span>
+                <button onClick={nextPage} disabled={currentPage === Math.ceil(students.length / studentsPerPage)}>Next</button>
+            </div>
+
+            <button 
+                onClick={handleDeleteAll} 
+                style={{ marginTop: "15px", backgroundColor: "#dc3545", color: "white" }}
+            >
+                Delete All Students
+            </button>
         </div>
     );
 }
