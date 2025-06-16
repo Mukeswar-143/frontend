@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './StudentApp.css';
-import Api from "./services/Api";
+import Api from "./components/Api";
+
 const apiBaseUrl = `${Api}/Student`;
 
 function StudentApp() {

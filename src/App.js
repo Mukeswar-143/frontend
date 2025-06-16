@@ -1,13 +1,11 @@
-import './App.css';
-import StudentApp from './StudentApp';
-
+import React from 'react';
+import ProductList from '../src/components/product/ProductList';
 
 function App() {
   return (
     <div className="App">
-     <StudentApp/>
-
-
+      <h1>Product Management App</h1>
+      <ProductList />
     </div>
   );
 }
