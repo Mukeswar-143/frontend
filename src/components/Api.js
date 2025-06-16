@@ -1,17 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
-const api = axios.create({
-  baseURL: 'http://localhost:8080/product',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const BASE_URL = "http://localhost:8080/product";
 
 const productAPI = {
-  getAll: () => api.get('/all'),
-  getByPid: (id) => api.get(`/getProductById/${id}`),
-  create: (data) => api.post('/entry', data),
-  deleteByPid: (pid) => api.delete(`/deleteProductById/${pid}`),
+  create: (data) => axios.post(`${BASE_URL}/entry`, data),
+  getPaginated: (page = 0, size = 5) => axios.get(`${BASE_URL}/getProductByPagination?page=${page}&size=${size}`),
+  deleteByPid: (pid) => axios.delete(`${BASE_URL}/deleteProductById/${pid}`),
 };
 
 export default productAPI;
