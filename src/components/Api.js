@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.200.112:8080/product";
+const BASE_URL = "http://localhost:8080/product";
 
 const productAPI = {
   create: (data) => axios.post(`${BASE_URL}/entry`, data),
