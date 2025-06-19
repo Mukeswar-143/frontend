@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import productAPI from '../Api';
+import productAPI from '../api/Api';
 
 const ProductForm = ({ onSuccess }) => {
     const [product, setProduct] = useState({
         pid: '',
         pname: '',
         price: '',
+        category : '',
         pdesc: '',
     });
 
@@ -17,7 +18,7 @@ const ProductForm = ({ onSuccess }) => {
         e.preventDefault();
         try {
             await productAPI.create(product);
-            setProduct({ pid: '', pname: '', price: '', pdesc: '' });
+            setProduct({ pid: '', pname: '', price: '', pdesc: '',category:'' });
             onSuccess();
         } catch (error) {
             alert(error.response?.data || "Error adding product");
@@ -29,6 +30,7 @@ const ProductForm = ({ onSuccess }) => {
             <input name="pid" value={product.pid} onChange={handleChange} placeholder="Product ID" required />
             <input name="pname" value={product.pname} onChange={handleChange} placeholder="Product Name" required />
             <input name="price" value={product.price} onChange={handleChange} placeholder="Price" required />
+            <input name="category" value={product.category} onChange={handleChange} placeholder='category' required/>
             <textarea name="pdesc" value={product.pdesc} onChange={handleChange} placeholder="Description" required />
             <button type="submit">Add Product</button>
         </form>

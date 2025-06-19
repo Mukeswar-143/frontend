@@ -1,0 +1,54 @@
+.main {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 150px; 
+}
+
+.search {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.seller-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.seller-form input,
+.seller-form textarea {
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 1.5px solid #aaa;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.seller-form button {
+  padding: 10px 16px;
+  font-size: 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.seller-form button:hover {
+  background-color: #125ea2;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import productAPI from '../Api';
+import productAPI from '../api/Api';
 import ProductForm from './ProductForm';
 import './Product.css';
 
@@ -38,6 +38,7 @@ const ProductList = () => {
                         <th>PID</th>
                         <th>Name</th>
                         <th>Price</th>
+                        <th>Category</th>
                         <th>Description</th>
                         <th>Delete</th>
                     </tr>
@@ -48,6 +49,7 @@ const ProductList = () => {
                             <td>{p.pid}</td>
                             <td>{p.pname}</td>
                             <td>{p.price}</td>
+                            <td>{p.category}</td>
                             <td>{p.pdesc}</td>
                             <td>
                                 <button className="delete-btn" onClick={() => handleDelete(p.pid)}>Delete</button>
