@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 import Logo from "../assests/logo.png";
 
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
   return (
     <div className="navbar">
       <div className="logo">
@@ -15,11 +19,17 @@ export default function Navbar() {
         <button>Search</button>
       </div>
 
-      <div className="nav">
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/about" className="nav-link">About</Link>
-        <Link to="/seller" className="nav-link">Seller</Link>
-        <Link to="/products" className="nav-link">Product</Link>
+      <div className={`nav ${menuOpen ? "active" : ""}`}>
+        <Link to="/" className="nav-link" onClick={toggleMenu}>Home</Link>
+        <Link to="/about" className="nav-link" onClick={toggleMenu}>About</Link>
+        <Link to="/seller" className="nav-link" onClick={toggleMenu}>Seller</Link>
+        <Link to="/products" className="nav-link" onClick={toggleMenu}>Product</Link>
+      </div>
+
+      <div className="hamburger" onClick={toggleMenu}>
+        <div className={`bar ${menuOpen ? "rotate1" : ""}`}></div>
+        <div className={`bar ${menuOpen ? "fade" : ""}`}></div>
+        <div className={`bar ${menuOpen ? "rotate2" : ""}`}></div>
       </div>
     </div>
   );

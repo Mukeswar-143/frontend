@@ -1,20 +1,17 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f2f5;
-  margin: 0;
-  padding: 0;
-}
 
 h1 {
   text-align: center;
   color: #333;
   margin-top: 20px;
+  background-color: white;
 }
 
 .container {
+  margin-top: 20vh;
   max-width: 800px;
-  margin: auto;
-  padding: 20px;
+  padding: 50px;
+  margin-left: auto;
+  margin-right: auto;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -24,13 +21,16 @@ form {
   flex-direction: column;
   gap: 10px;
   margin-bottom: 30px;
+  background-color: white;
 }
 
 input,
 textarea {
   padding: 8px;
   border: 1px solid #ccc;
+  background-color: white;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 button {
@@ -40,6 +40,7 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 button:hover {
@@ -57,6 +58,7 @@ td {
   border: 1px solid #ddd;
   text-align: center;
   padding: 10px;
+  font-size: 15px;
 }
 
 th {
@@ -71,8 +73,33 @@ th {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .delete-btn:hover {
   background-color: #d32f2f;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+    margin: 20px;
+  }
+
+  input,
+  textarea,
+  button {
+    font-size: 14px;
+  }
+
+  table {
+    font-size: 14px;
+    overflow-x: auto;
+  }
+
+  th,
+  td {
+    padding: 8px;
+  }
 }

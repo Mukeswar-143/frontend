@@ -1,7 +1,7 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .main {
@@ -9,13 +9,13 @@
   width: 100%;
   height: 200vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 
 .navbar {
-    width: 100%;
-    height: 12vh;
+  width: 100%;
+  height: 12vh;
 }
 
 .login {
@@ -23,5 +23,29 @@
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: 0px 120px 0 100px; /* top, right, bottom, left */
+  padding: 80px 50px 50px 50px;
+}
+
+.category {
+  width: 60vw;
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  padding: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: -100px;
+  margin-left: 30px;
+}
+.category h1{
+      background-color: rgb(228, 238, 247);
+
+}
+
+.login {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
