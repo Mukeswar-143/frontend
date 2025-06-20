@@ -26,13 +26,25 @@ const ProductForm = ({ onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="pid" value={product.pid} onChange={handleChange} placeholder="Product ID" required />
-      <input name="pname" value={product.pname} onChange={handleChange} placeholder="Product Name" required />
-      <input name="price" value={product.price} onChange={handleChange} placeholder="Price" required />
-      <input name="category" value={product.category} onChange={handleChange} placeholder="Category" required />
-      <textarea name="pdesc" value={product.pdesc} onChange={handleChange} placeholder="Description" required />
-      <button type="submit">Add Product</button>
+    <form className="row g-3 mb-4" onSubmit={handleSubmit}>
+      <div className="col-md-2">
+        <input name="pid" value={product.pid} onChange={handleChange} className="form-control" placeholder="Product ID" required />
+      </div>
+      <div className="col-md-2">
+        <input name="pname" value={product.pname} onChange={handleChange} className="form-control" placeholder="Product Name" required />
+      </div>
+      <div className="col-md-2">
+        <input name="price" value={product.price} onChange={handleChange} className="form-control" placeholder="Price" required />
+      </div>
+      <div className="col-md-2">
+        <input name="category" value={product.category} onChange={handleChange} className="form-control" placeholder="Category" required />
+      </div>
+      <div className="col-md-3">
+        <textarea name="pdesc" value={product.pdesc} onChange={handleChange} className="form-control" placeholder="Description" required />
+      </div>
+      <div className="col-md-1">
+        <button type="submit" className="btn btn-success w-100">Add</button>
+      </div>
     </form>
   );
 };

@@ -1,36 +1,55 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Navbar.css";
-import Logo from "../assests/logo.png";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Logo from "../assests/logo.png"; 
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-
   return (
-    <div className="navbar">
-      <div className="logo">
-        <img src={Logo} alt="Logo" />
-      </div>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+      <Link className="navbar-brand d-flex align-items-center" to="/">
+        <img src={Logo} alt="Logo" height="70" className="me-1" />
+        ShopVerse
+      </Link>
 
-      <div className="navbar-search">
-        <input type="text" placeholder="Search products..." />
-        <button>Search</button>
-      </div>
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
 
-      <div className={`nav ${menuOpen ? "active" : ""}`}>
-        <Link to="/" className="nav-link" onClick={toggleMenu}>Home</Link>
-        <Link to="/about" className="nav-link" onClick={toggleMenu}>About</Link>
-        <Link to="/seller" className="nav-link" onClick={toggleMenu}>Seller</Link>
-        <Link to="/products" className="nav-link" onClick={toggleMenu}>Product</Link>
-      </div>
+      <div className="collapse navbar-collapse" id="navbarNav">
+        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <li className="nav-item">
+            <Link className="nav-link" to="/">Home</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/products">Products</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/seller">Seller</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/about">About</Link>
+          </li>
+        </ul>
 
-      <div className="hamburger" onClick={toggleMenu}>
-        <div className={`bar ${menuOpen ? "rotate1" : ""}`}></div>
-        <div className={`bar ${menuOpen ? "fade" : ""}`}></div>
-        <div className={`bar ${menuOpen ? "rotate2" : ""}`}></div>
+        <form className="d-flex" role="search">
+          <input
+            className="form-control me-3"
+            type="search"
+            placeholder="Search products..."
+            aria-label="Search"
+            style={{ minWidth: "600px" }}
+          />
+          <button className="btn btn-outline-success" type="submit">Search</button>
+        </form>
       </div>
-    </div>
+    </nav>
   );
 }
