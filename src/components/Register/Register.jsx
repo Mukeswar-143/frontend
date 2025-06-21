@@ -40,7 +40,7 @@ export default function Register() {
         password: formData.password,
       };
 
-      await axios.post("http://localhost:8080/register/entry", userPayload);
+      await axios.post("http://localhost:8080/admin/entry", userPayload);
 
       setModalMessage("✅ Registration successful!");
       new window.bootstrap.Modal(modalRef.current).show();

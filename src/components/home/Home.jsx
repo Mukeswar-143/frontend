@@ -22,7 +22,7 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/register/login", {
+      const res = await axios.post("http://localhost:8080/admin/login", {
         email: loginData.email,
         password: loginData.password
       });
