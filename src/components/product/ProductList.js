@@ -35,6 +35,20 @@ const ProductList = () => {
     }
   };
 
+  const renderPagination = () => {
+    const items = [];
+    for (let i = 0; i < totalPages; i++) {
+      items.push(
+        <li key={i} className={`page-item ${page === i ? "active" : ""}`}>
+          <button className="page-link" onClick={() => setPage(i)}>
+            {i + 1}
+          </button>
+        </li>
+      );
+    }
+    return items;
+  };
+
   return (
     <div className="container py-4">
       <h1 className="text-center mb-4">Product Catalog</h1>
@@ -74,15 +88,24 @@ const ProductList = () => {
         </table>
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mt-3">
-        <button className="btn btn-outline-primary" onClick={() => setPage(page - 1)} disabled={page === 0}>
-          Previous
-        </button>
-        <span>Page {page + 1} of {totalPages}</span>
-        <button className="btn btn-outline-primary" onClick={() => setPage(page + 1)} disabled={page + 1 >= totalPages}>
-          Next
-        </button>
-      </div>
+      {/* Bootstrap Pagination */}
+      <nav className="d-flex justify-content-center mt-4">
+        <ul className="pagination">
+          <li className={`page-item ${page === 0 ? "disabled" : ""}`}>
+            <button className="page-link" onClick={() => setPage(page - 1)}>
+              Previous
+            </button>
+          </li>
+
+          {renderPagination()}
+
+          <li className={`page-item ${page + 1 >= totalPages ? "disabled" : ""}`}>
+            <button className="page-link" onClick={() => setPage(page + 1)}>
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };

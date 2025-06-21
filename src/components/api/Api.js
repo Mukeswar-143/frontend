@@ -18,6 +18,9 @@ const productAPI = {
   getById: (id) => axios.get(`${BASE_URL}/getProductById/${id}`),
 
   deleteByPid: (pid) => axios.delete(`${BASE_URL}/deleteProductById/${pid}`),
+
+  getByCategory: (category) =>
+    axios.get(`${BASE_URL}/getProducts?page=0&size=100&category=${encodeURIComponent(category)}`),
 };
 
 export default productAPI;
