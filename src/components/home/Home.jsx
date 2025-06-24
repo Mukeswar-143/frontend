@@ -77,7 +77,7 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
         </button>
       </div>
 
-  
+
       <div className="row justify-content-center align-items-center">
         <div className="col-12 col-md-6 text-center text-md-start mb-4 mb-md-0">
           <h1 className="display-5 shopverse-heading">Welcome to ShopVerse</h1>
@@ -153,22 +153,25 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
 
       <div className="mt-5">
         <h3 className="text-center mb-4">Explore Categories</h3>
-        <div className="row g-4">
+        <div className="row g-4 justify-content-center">
           {categories.map((cat, index) => (
             <div className="col-6 col-sm-4 col-md-3 col-lg-2 text-center" key={index}>
-              <div className="card h-100 shadow-sm p-3">
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="img-fluid mb-2"
-                  style={{ maxHeight: "60px", objectFit: "contain" }}
-                />
-                <h6>{cat.name}</h6>
-              </div>
+              <Link to={`/category/${cat.name}`} className="text-decoration-none text-dark">
+                <div className="card h-100 shadow-sm p-3 border-0 hover-shadow">
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="img-fluid mb-2"
+                    style={{ maxHeight: "60px", objectFit: "contain" }}
+                  />
+                  <h6 className="fw-semibold">{cat.name}</h6>
+                </div>
+              </Link>
             </div>
           ))}
         </div>
       </div>
+
     </div>
   );
 }

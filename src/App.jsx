@@ -5,6 +5,8 @@ import Products from "./components/product/ProductList";
 import Register from "./components/Register/Register";
 import About from "./components/About/About";
 import Navbar from "./components/home/Navbar";
+import CategoryPage from "./components/category/Category";
+
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,8 +27,11 @@ export default function App() {
           path="/products"
           element={isLoggedIn ? <Products /> : <Navigate to="/" />}
         />
+        <Route path="/category/:categoryName" element={<CategoryPage />} />
       </Routes>
     </Router>
+  
+
   );
 }
 
