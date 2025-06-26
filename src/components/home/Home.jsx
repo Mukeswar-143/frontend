@@ -31,14 +31,14 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
     localStorage.setItem("jwtToken", jwtToken);
 
       if (res.status === 200) {
-        alert("Login successful ✅");
+        alert("Login successful");
         setIsLoggedIn(true);
         setLoginData({ username: "", password: "" });
         setLoginError("");
         navigate("/");
       }
     } catch (err) {
-      setLoginError("Invalid username or password ❌");
+      setLoginError("Invalid username or password");
     }
   };
 

@@ -26,7 +26,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.repassword) {
-      setModalMessage("❌ Passwords do not match.");
+      setModalMessage("Passwords do not match.");
       new window.bootstrap.Modal(modalRef.current).show();
       return;
     }
@@ -41,10 +41,10 @@ export default function Register() {
 
     try {
       await axios.post("http://localhost:8080/register", userPayload);
-      setModalMessage("✅ Registration successful!");
+      setModalMessage("Registration successful!");
       new window.bootstrap.Modal(modalRef.current).show();
     } catch (err) {
-      setModalMessage("❌ Registration failed. Try again.");
+      setModalMessage("Registration failed. Try again.");
       new window.bootstrap.Modal(modalRef.current).show();
     }
   };
@@ -101,7 +101,6 @@ export default function Register() {
         </p>
       </div>
 
-      {/* Modal */}
       <div
         className="modal fade"
         ref={modalRef}
