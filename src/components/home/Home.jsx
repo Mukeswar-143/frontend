@@ -9,7 +9,7 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
-    email: "",
+    username: "",
     password: ""
   });
 
@@ -22,20 +22,23 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/admin/login", {
-        email: loginData.email,
+      const res = await axios.post("http://localhost:8080/login", {
+        username: loginData.username,
         password: loginData.password
       });
+      console.log(res.data);
+    const jwtToken = res.data;
+    localStorage.setItem("jwtToken", jwtToken);
 
       if (res.status === 200) {
         alert("Login successful ✅");
         setIsLoggedIn(true);
-        setLoginData({ email: "", password: "" });
+        setLoginData({ username: "", password: "" });
         setLoginError("");
         navigate("/");
       }
     } catch (err) {
-      setLoginError("Invalid email or password ❌");
+      setLoginError("Invalid username or password ❌");
     }
   };
 
@@ -77,14 +80,13 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
         </button>
       </div>
 
-
       <div className="row justify-content-center align-items-center">
         <div className="col-12 col-md-6 text-center text-md-start mb-4 mb-md-0">
           <h1 className="display-5 shopverse-heading">Welcome to ShopVerse</h1>
           <p className="lead d-none d-md-block shop-text">Shop smarter. Shop better.</p>
           <p className="fs-5 d-none d-md-block text-center text-muted fw-semibold lh-lg">
             Your one-stop digital universe for smarter shopping. We bring you curated collections,
-            unbeatable deals, and a seamless experience across categories you care about from fashion
+            unbeatable deals, and a seamless experience across categories you care about—from fashion
             to tech, lifestyle to home essentials.
           </p>
         </div>
@@ -99,15 +101,15 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
               <form onSubmit={handleLoginSubmit}>
                 <div className="form-floating mb-3">
                   <input
-                    type="email"
+                    type="text"
                     className="form-control"
-                    id="email"
-                    placeholder="Email"
-                    value={loginData.email}
+                    id="username"
+                    placeholder="Username"
+                    value={loginData.username}
                     onChange={handleLoginChange}
                     required
                   />
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="username">Username</label>
                 </div>
 
                 <div className="form-floating mb-3">
@@ -171,7 +173,6 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
           ))}
         </div>
       </div>
-
     </div>
   );
 }

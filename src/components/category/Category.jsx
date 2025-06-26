@@ -7,14 +7,23 @@ export default function CategoryPage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/product/getProducts?category=${categoryName}`)
-      .then((res) => {
+    const fetchProducts = async () => {
+      const token = localStorage.getItem("jwtToken");
+
+      try {
+        const res = await axios.get(`http://localhost:8080/product/getProducts?category=${encodeURIComponent(categoryName)}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
         setProducts(res.data.content); // Assuming paginated response
-      })
-      .catch((err) => {
-        console.error("Error fetching products", err);
-      });
+      } catch (err) {
+        console.error("❌ Error fetching products:", err);
+      }
+    };
+
+    fetchProducts();
   }, [categoryName]);
 
   return (
@@ -28,7 +37,7 @@ export default function CategoryPage() {
                 <div className="card-body">
                   <h5 className="card-title">{product.pname}</h5>
                   <p className="card-text">₹{product.price}</p>
-                   <p className="card-text">{product.pdesc}</p>
+                  <p className="card-text">{product.pdesc}</p>
                 </div>
               </div>
             </div>

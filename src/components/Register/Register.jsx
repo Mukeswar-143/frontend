@@ -6,16 +6,16 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 export default function Register() {
   const navigate = useNavigate();
+  const modalRef = useRef(null);
+
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     pnumber: "",
     address: "",
     password: "",
     repassword: "",
   });
-
-  const modalRef = useRef(null); // Bootstrap modal reference
 
   const [modalMessage, setModalMessage] = useState("");
 
@@ -31,17 +31,16 @@ export default function Register() {
       return;
     }
 
+    const userPayload = {
+      username: formData.username,
+      email: formData.email,
+      pnumber: Number(formData.pnumber),
+      address: formData.address,
+      password: formData.password,
+    };
+
     try {
-      const userPayload = {
-        name: formData.name,
-        email: formData.email,
-        pnumber: Number(formData.pnumber),
-        address: formData.address,
-        password: formData.password,
-      };
-
-      await axios.post("http://localhost:8080/admin/entry", userPayload);
-
+      await axios.post("http://localhost:8080/register", userPayload);
       setModalMessage("✅ Registration successful!");
       new window.bootstrap.Modal(modalRef.current).show();
     } catch (err) {
@@ -52,7 +51,7 @@ export default function Register() {
 
   const handleModalOk = () => {
     if (modalMessage.includes("successful")) {
-      navigate("/"); // Redirect to login/home page
+      navigate("/"); // Redirect to login
     }
   };
 
@@ -63,8 +62,8 @@ export default function Register() {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">Name</label>
-            <input type="text" className="form-control" id="name" value={formData.name} onChange={handleChange} required />
+            <label htmlFor="username" className="form-label">Username</label>
+            <input type="text" className="form-control" id="username" value={formData.username} onChange={handleChange} required />
           </div>
 
           <div className="mb-3">
@@ -102,7 +101,7 @@ export default function Register() {
         </p>
       </div>
 
-      {/* ✅ Modal for Success/Error Message */}
+      {/* Modal */}
       <div
         className="modal fade"
         ref={modalRef}
