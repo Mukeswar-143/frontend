@@ -11,7 +11,7 @@ export default function CategoryPage() {
       const token = localStorage.getItem("jwtToken");
 
       try {
-        const res = await axios.get(`http://localhost:8080/product/getProducts?category=${encodeURIComponent(categoryName)}`, {
+        const res = await axios.get(`https://productcatlog.onrender.com/product/getProducts?category=${encodeURIComponent(categoryName)}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
