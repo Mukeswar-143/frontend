@@ -40,7 +40,7 @@ export default function Register() {
     };
 
     try {
-      await axios.post("http://localhost:8080/register", userPayload);
+      await axios.post("https://productcatlog.onrender.com/register", userPayload);
       setModalMessage("Registration successful!");
       new window.bootstrap.Modal(modalRef.current).show();
     } catch (err) {

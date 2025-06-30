@@ -22,13 +22,13 @@ export default function Home({ isLoggedIn, setIsLoggedIn }) {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/login", {
+      const res = await axios.post("https://productcatlog.onrender.com/login", {
         username: loginData.username,
         password: loginData.password
       });
-      console.log(res.data);
-    const jwtToken = res.data;
-    localStorage.setItem("jwtToken", jwtToken);
+      // console.log(res.data);
+      const jwtToken = res.data;
+      localStorage.setItem("jwtToken", jwtToken);
 
       if (res.status === 200) {
         alert("Login successful");

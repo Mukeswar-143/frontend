@@ -6,6 +6,7 @@ import Register from "./components/Register/Register";
 import About from "./components/About/About";
 import Navbar from "./components/home/Navbar";
 import CategoryPage from "./components/category/Category";
+import OAuth2Redirect from "./OAuth2Redirect";
 
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
           element={isLoggedIn ? <Products /> : <Navigate to="/" />}
         />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
+         <Route path="/oauth2-redirect" element={<OAuth2Redirect setIsLoggedIn={setIsLoggedIn} />} />
       </Routes>
     </Router>
   

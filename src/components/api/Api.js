@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/product";
+const BASE_URL = "https://productcatlog.onrender.com/product";
 
 const authHeader = () => {
   const token = localStorage.getItem("jwtToken");
