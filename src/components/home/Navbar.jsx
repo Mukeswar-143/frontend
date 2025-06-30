@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import {
+  Navbar,
+  Container,
+  Nav,
+  Form,
+  Button,
+  Offcanvas,
+} from "react-bootstrap";
 import productAPI from "../api/Api";
 import "./Navbar.css";
 
-export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
+function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
   const [searchInput, setSearchInput] = useState("");
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const offcanvasRef = useRef(); // Reference to offcanvas
+
+  const closeOffcanvas = () => {
+    const offcanvasEl = offcanvasRef.current;
+    if (offcanvasEl && offcanvasEl.classList.contains("show")) {
+      const instance = window.bootstrap.Offcanvas.getInstance(offcanvasEl);
+      instance?.hide();
+    }
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -23,13 +39,13 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
         setResults(data);
         setError("");
       }
-      const offcanvas = new window.bootstrap.Offcanvas("#searchResultsCanvas");
-      offcanvas.show();
+      const searchOffcanvas = new window.bootstrap.Offcanvas("#searchResultsCanvas");
+      searchOffcanvas.show();
     } catch (err) {
       setResults([]);
       setError("Error fetching search results. Please try again.");
-      const offcanvas = new window.bootstrap.Offcanvas("#searchResultsCanvas");
-      offcanvas.show();
+      const searchOffcanvas = new window.bootstrap.Offcanvas("#searchResultsCanvas");
+      searchOffcanvas.show();
     }
   };
 
@@ -41,51 +57,68 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-3">
-        <Link className="navbar-brand fw-bold" to="/">ShopVerse</Link>
+      <Navbar key="lg" expand="lg" className="bg-dark navbar-dark p-3 mb-3">
+        <Container fluid>
+          <Navbar.Brand as={Link} to="/" className="fw-bold">
+            ShopVerse
+          </Navbar.Brand>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
+          <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
+          <Navbar.Offcanvas
+            ref={offcanvasRef}
+            id="offcanvasNavbar-expand-lg"
+            aria-labelledby="offcanvasNavbarLabel-expand-lg"
+            placement="end"
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title id="offcanvasNavbarLabel-expand-lg">
+                ShopVerse Menu
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className="justify-content-start flex-grow-1 pe-3">
+                <Nav.Link as={Link} to="/" onClick={closeOffcanvas}>
+                  Home
+                </Nav.Link>
+                <Nav.Link as={Link} to="/products" onClick={closeOffcanvas}>
+                  Products
+                </Nav.Link>
+                <Nav.Link as={Link} to="/about" onClick={closeOffcanvas}>
+                  About
+                </Nav.Link>
+              </Nav>
 
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/products">Products</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/about">About</Link>
-            </li>
-          </ul>
+              <Form className="d-flex me-3 mt-3 mt-lg-0" onSubmit={handleSearch}>
+                <Form.Control
+                  type="search"
+                  placeholder="Search by category..."
+                  className="me-2"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  required
+                  style={{ width: "400px" }} // ⬅️ Adjust width as needed
+                />
+                <Button variant="outline-success" type="submit">
+                  Search
+                </Button>
+              </Form>
 
-          <form className="d-flex me-3" onSubmit={handleSearch}>
-            <input
-              className="form-control me-2"
-              type="text"
-              placeholder="Search by category..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              required
-              style={{ minWidth: "300px" }}
-            />
-            <button className="btn btn-outline-success" type="submit">Search</button>
-          </form>
 
-          {isLoggedIn && (
-            <button className="btn btn-outline-light" onClick={handleLogout}>
-              Logout
-            </button>
-          )}
-        </div>
-      </nav>
+              {isLoggedIn && (
+                <Button
+                  variant="outline-light"
+                  className="ms-lg-3 mt-3 mt-lg-0"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              )}
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar>
+
+      {/* Offcanvas Search Results */}
       <div
         className="offcanvas offcanvas-start wide-offcanvas"
         tabIndex="-1"
@@ -94,7 +127,12 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
       >
         <div className="offcanvas-header">
           <h5 id="searchResultsCanvasLabel">Search Results</h5>
-          <button type="button" className="btn-close" data-bs-dismiss="offcanvas" />
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
         </div>
         <div className="offcanvas-body">
           {error ? (
@@ -118,3 +156,5 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
     </>
   );
 }
+
+export default AppNavbar;
