@@ -1,30 +1,41 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Navbar,
-  Container,
-  Nav,
-  Form,
-  Button,
-  Offcanvas,
-} from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import * as bootstrap from "bootstrap"; // ✅ Proper import
 import productAPI from "../api/Api";
 import "./Navbar.css";
 
-function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
+export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
   const [searchInput, setSearchInput] = useState("");
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const offcanvasRef = useRef(); // Reference to offcanvas
+  const closeNavbarOffcanvas = () => {
+    const navbarOffcanvasEl = document.getElementById("navbarOffcanvas");
+    const searchCanvasEl = document.getElementById("searchResultsCanvas");
 
-  const closeOffcanvas = () => {
-    const offcanvasEl = offcanvasRef.current;
-    if (offcanvasEl && offcanvasEl.classList.contains("show")) {
-      const instance = window.bootstrap.Offcanvas.getInstance(offcanvasEl);
-      instance?.hide();
+    // Close main menu offcanvas
+    let navbarOffcanvas = bootstrap.Offcanvas.getInstance(navbarOffcanvasEl);
+    if (!navbarOffcanvas) {
+      navbarOffcanvas = new bootstrap.Offcanvas(navbarOffcanvasEl);
     }
+    navbarOffcanvas.hide();
+
+    // Also close search offcanvas if open
+    if (searchCanvasEl) {
+      let searchOffcanvas = bootstrap.Offcanvas.getInstance(searchCanvasEl);
+      if (searchOffcanvas) {
+        searchOffcanvas.hide();
+      }
+    }
+
+    // Remove all remaining offcanvas backdrops
+    document.querySelectorAll(".offcanvas-backdrop").forEach((backdrop) => backdrop.remove());
+
+    // Clean up any leftover body classes
+    document.body.classList.remove("offcanvas-backdrop", "show", "modal-open", "offcanvas-open");
+    document.body.style.overflow = "auto";
   };
 
   const handleSearch = async (e) => {
@@ -39,88 +50,122 @@ function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
         setResults(data);
         setError("");
       }
-      const searchOffcanvas = new window.bootstrap.Offcanvas("#searchResultsCanvas");
-      searchOffcanvas.show();
+      const offcanvas = new bootstrap.Offcanvas("#searchResultsCanvas");
+      offcanvas.show();
     } catch (err) {
       setResults([]);
       setError("Error fetching search results. Please try again.");
-      const searchOffcanvas = new window.bootstrap.Offcanvas("#searchResultsCanvas");
-      searchOffcanvas.show();
+      const offcanvas = new bootstrap.Offcanvas("#searchResultsCanvas");
+      offcanvas.show();
     }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("jwtToken");
     alert("Logged out successfully.");
     navigate("/");
   };
 
   return (
     <>
-      <Navbar key="lg" expand="lg" className="bg-dark navbar-dark p-3 mb-3">
-        <Container fluid>
-          <Navbar.Brand as={Link} to="/" className="fw-bold">
+      <nav className="navbar navbar-dark bg-dark p-3">
+        <div className="container-fluid">
+          <Link className="navbar-brand fw-bold" to="/">
             ShopVerse
-          </Navbar.Brand>
+          </Link>
 
-          <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
-          <Navbar.Offcanvas
-            ref={offcanvasRef}
-            id="offcanvasNavbar-expand-lg"
-            aria-labelledby="offcanvasNavbarLabel-expand-lg"
-            placement="end"
+          {/* Toggle Offcanvas */}
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#navbarOffcanvas"
+            aria-controls="navbarOffcanvas"
           >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id="offcanvasNavbarLabel-expand-lg">
-                ShopVerse Menu
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="justify-content-start flex-grow-1 pe-3">
-                <Nav.Link as={Link} to="/" onClick={closeOffcanvas}>
-                  Home
-                </Nav.Link>
-                <Nav.Link as={Link} to="/products" onClick={closeOffcanvas}>
-                  Products
-                </Nav.Link>
-                <Nav.Link as={Link} to="/about" onClick={closeOffcanvas}>
-                  About
-                </Nav.Link>
-              </Nav>
+            <span className="navbar-toggler-icon" />
+          </button>
 
-              <Form className="d-flex me-3 mt-3 mt-lg-0" onSubmit={handleSearch}>
-                <Form.Control
-                  type="search"
+          {/* Offcanvas Menu */}
+          <div
+            className="offcanvas offcanvas-end text-bg-dark"
+            tabIndex="-1"
+            id="navbarOffcanvas"
+            aria-labelledby="navbarOffcanvasLabel"
+          >
+            <div className="offcanvas-header">
+              <h5 className="offcanvas-title" id="navbarOffcanvasLabel">
+                Menu
+              </h5>
+              <button
+                type="button"
+                className="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="offcanvas-body d-flex flex-column gap-3">
+              <ul className="navbar-nav">
+                <li className="nav-item">
+                  <Link
+                    className="nav-link text-white"
+                    to="/"
+                    onClick={closeNavbarOffcanvas}
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link text-white"
+                    to="/products"
+                    onClick={closeNavbarOffcanvas}
+                  >
+                    Products
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link text-white"
+                    to="/about"
+                    onClick={closeNavbarOffcanvas}
+                  >
+                    About
+                  </Link>
+                </li>
+              </ul>
+
+              <form className="d-flex mt-3" onSubmit={handleSearch}>
+                <input
+                  className="form-control me-2"
+                  type="text"
                   placeholder="Search by category..."
-                  className="me-2"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   required
-                  style={{ width: "400px" }} // ⬅️ Adjust width as needed
                 />
-                <Button variant="outline-success" type="submit">
+                <button className="btn btn-outline-success" type="submit">
                   Search
-                </Button>
-              </Form>
-
+                </button>
+              </form>
 
               {isLoggedIn && (
-                <Button
-                  variant="outline-light"
-                  className="ms-lg-3 mt-3 mt-lg-0"
+                <button
+                  className="btn btn-outline-light mt-3"
                   onClick={handleLogout}
                 >
                   Logout
-                </Button>
+                </button>
               )}
-            </Offcanvas.Body>
-          </Navbar.Offcanvas>
-        </Container>
-      </Navbar>
+            </div>
+          </div>
+        </div>
+      </nav>
 
-      {/* Offcanvas Search Results */}
+      {/* Search Results Offcanvas */}
       <div
-        className="offcanvas offcanvas-start wide-offcanvas"
+        className="offcanvas offcanvas-start"
         tabIndex="-1"
         id="searchResultsCanvas"
         aria-labelledby="searchResultsCanvasLabel"
@@ -132,7 +177,7 @@ function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
             className="btn-close"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div className="offcanvas-body">
           {error ? (
@@ -144,8 +189,12 @@ function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
               {results.map((item) => (
                 <li key={item.pid} className="list-group-item">
                   <h5>{item.pname}</h5>
-                  <p><strong>Category:</strong> {item.category}</p>
-                  <p><strong>Price:</strong> ₹{item.price}</p>
+                  <p>
+                    <strong>Category:</strong> {item.category}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> ₹{item.price}
+                  </p>
                   <p>{item.pdesc}</p>
                 </li>
               ))}
@@ -156,5 +205,3 @@ function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
     </>
   );
 }
-
-export default AppNavbar;
