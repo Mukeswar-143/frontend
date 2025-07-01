@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import * as bootstrap from "bootstrap"; // ✅ Proper import
+import * as bootstrap from "bootstrap"; // ✅ Proper import for JS
 import productAPI from "../api/Api";
 import "./Navbar.css";
 
@@ -15,14 +15,14 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
     const navbarOffcanvasEl = document.getElementById("navbarOffcanvas");
     const searchCanvasEl = document.getElementById("searchResultsCanvas");
 
-    // Close main menu offcanvas
+    // Hide Navbar menu
     let navbarOffcanvas = bootstrap.Offcanvas.getInstance(navbarOffcanvasEl);
     if (!navbarOffcanvas) {
       navbarOffcanvas = new bootstrap.Offcanvas(navbarOffcanvasEl);
     }
     navbarOffcanvas.hide();
 
-    // Also close search offcanvas if open
+    // Also hide search results if open
     if (searchCanvasEl) {
       let searchOffcanvas = bootstrap.Offcanvas.getInstance(searchCanvasEl);
       if (searchOffcanvas) {
@@ -30,11 +30,16 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
       }
     }
 
-    // Remove all remaining offcanvas backdrops
-    document.querySelectorAll(".offcanvas-backdrop").forEach((backdrop) => backdrop.remove());
-
-    // Clean up any leftover body classes
-    document.body.classList.remove("offcanvas-backdrop", "show", "modal-open", "offcanvas-open");
+    // Clean up any remaining backdrops
+    document.querySelectorAll(".offcanvas-backdrop").forEach((backdrop) =>
+      backdrop.remove()
+    );
+    document.body.classList.remove(
+      "offcanvas-backdrop",
+      "show",
+      "modal-open",
+      "offcanvas-open"
+    );
     document.body.style.overflow = "auto";
   };
 
@@ -50,13 +55,22 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
         setResults(data);
         setError("");
       }
-      const offcanvas = new bootstrap.Offcanvas("#searchResultsCanvas");
-      offcanvas.show();
+
+      const searchCanvasEl = document.getElementById("searchResultsCanvas");
+      let searchOffcanvas = bootstrap.Offcanvas.getInstance(searchCanvasEl);
+      if (!searchOffcanvas) {
+        searchOffcanvas = new bootstrap.Offcanvas(searchCanvasEl);
+      }
+      searchOffcanvas.show();
     } catch (err) {
       setResults([]);
       setError("Error fetching search results. Please try again.");
-      const offcanvas = new bootstrap.Offcanvas("#searchResultsCanvas");
-      offcanvas.show();
+      const searchCanvasEl = document.getElementById("searchResultsCanvas");
+      let searchOffcanvas = bootstrap.Offcanvas.getInstance(searchCanvasEl);
+      if (!searchOffcanvas) {
+        searchOffcanvas = new bootstrap.Offcanvas(searchCanvasEl);
+      }
+      searchOffcanvas.show();
     }
   };
 
@@ -135,21 +149,6 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                   </Link>
                 </li>
               </ul>
-
-              <form className="d-flex mt-3" onSubmit={handleSearch}>
-                <input
-                  className="form-control me-2"
-                  type="text"
-                  placeholder="Search by category..."
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  required
-                />
-                <button className="btn btn-outline-success" type="submit">
-                  Search
-                </button>
-              </form>
-
               {isLoggedIn && (
                 <button
                   className="btn btn-outline-light mt-3"
@@ -162,46 +161,6 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
           </div>
         </div>
       </nav>
-
-      {/* Search Results Offcanvas */}
-      <div
-        className="offcanvas offcanvas-start"
-        tabIndex="-1"
-        id="searchResultsCanvas"
-        aria-labelledby="searchResultsCanvasLabel"
-      >
-        <div className="offcanvas-header">
-          <h5 id="searchResultsCanvasLabel">Search Results</h5>
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-          />
-        </div>
-        <div className="offcanvas-body">
-          {error ? (
-            <div className="text-danger text-center fw-semibold">{error}</div>
-          ) : results.length === 0 ? (
-            <div className="text-muted text-center">No products found</div>
-          ) : (
-            <ul className="list-group">
-              {results.map((item) => (
-                <li key={item.pid} className="list-group-item">
-                  <h5>{item.pname}</h5>
-                  <p>
-                    <strong>Category:</strong> {item.category}
-                  </p>
-                  <p>
-                    <strong>Price:</strong> ₹{item.price}
-                  </p>
-                  <p>{item.pdesc}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
     </>
   );
 }
